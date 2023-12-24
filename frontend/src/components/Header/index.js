@@ -28,9 +28,9 @@ const Header = props => {
     <header className="header">
       <div className="wrap">
         <div className="logo">
-          {/* <Link to="/"> */}
+          <Link to="/">
             <img src={Logo} alt="SimpleTut LOGO" />
-          {/* </Link> */}
+          </Link>
         </div>
 
          {/* <nav className={`mainMenu ${activeMenu ? 'active' : ''}`}>
@@ -52,14 +52,14 @@ const Header = props => {
 
           <ul>
 
-            {/* <li>
-              <Link to="/cart">
+            <li>
+              {/* <Link to="/cart">
                 Your Cart ({totalNumCartItems})
                 <i class="fas fa-shopping-basket"></i>
-              </Link>
+              </Link> */}
             </li>
 
-            {currentUser && [
+            {/* {currentUser && [
               <li key={1}>
                 <Link to="/dashboard">
                   My Account
@@ -72,23 +72,24 @@ const Header = props => {
                   <i class="fas fa-sign-out-alt"></i>
                 </span>
               </li>
-            ]}
+            ]} */}
 
-            {!currentUser && [
+            {/* {!currentUser && [ */}
               <li key={1} className="hideOnMobile">
                 <Link to="/registration">
                   Register
                 </Link>
-              </li>,
-              <li key={2}>
+              </li>
+              {/* , */}
+              {/* <li key={2}>
                 <Link to="/login">
                   Login
                   <i class="fas fa-user-circle"></i>
                 </Link>
-              </li>
-            ]}
+              </li> */}
+            {/* ]} */}
 
-            <li className="mobileMenu">
+            {/* <li className="mobileMenu">
               <span onClick={() => setActiveMenu(!activeMenu)}>
                 <i className="fas fa-bars"></i>
               </span>
