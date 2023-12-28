@@ -1,11 +1,9 @@
-import React from 'react'
+import React from 'react';
+import Signup from '../../components/SignUp/index';
+import './style.scss';
 
-function Registration() {
-  return (
-    <div>
-      Registration
-    </div>
-  )
-}
+const Registration = props => {
+  return <Signup />;
+};
 
-export default Registration
+export default Registration;

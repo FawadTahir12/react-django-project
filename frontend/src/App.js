@@ -6,14 +6,9 @@ import Registration from "./pages/Registration/index";
 import MainLayout from "./layouts/mainLayout";
 import HomePageLayout from "./layouts/homePagelayout";
 function App() {
-  console.log("App");
   return (
     <div className="App">
       <Routes>
-      {/* <Route
-    path="/"
-    element={<MainLayout component={<Homepage/>} />}
-  /> */}
     <Route
     path="/"
     element={<HomePageLayout  component={<Homepage/>} />}
