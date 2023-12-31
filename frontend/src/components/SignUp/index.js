@@ -8,35 +8,36 @@ import AuthWrapper from '../AuthWrapper/index';
 import FormInput from '../forms/FormInput/index';
 import Button from '../forms/Button/index';
 
-// const mapState = ({ user }) => ({
-//   currentUser: user.currentUser,
-//   userErr: user.userErr
-// });
+const mapState = ({ user }) => ({
+  currentUser: user.user,
+  userErr: user.error
+});
 
 const Signup = props => {
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const user = useSelector((state) => state.user.user);
+  const { currentUser, userErr } = useSelector(mapState);
+
   const [fullname, setfullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState('');
 
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       reset();
       nav('/');
     }
 
-  }, [user]);
+  }, [currentUser]);
 
-//   useEffect(() => {
-//     if (Array.isArray(userErr) && userErr.length > 0) {
-//       setErrors(userErr);
-//     }
+  useEffect(() => {
+    if (userErr && userErr.length > 0) {
+      setErrors(userErr);
+    }
 
-//   }, [userErr]);
+  }, [userErr]);
 
   const reset = () => {
     setfullname('');  
@@ -67,13 +68,7 @@ const Signup = props => {
 
         {errors.length > 0 && (
           <ul>
-            {errors.map((err, index) => {
-              return (
-                <li key={index}>
-                  {err}
-                </li>
-              );
-            })}
+            {errors}   
           </ul>
         )}
         <form onSubmit={handleFormSubmit}> 

@@ -1,4 +1,4 @@
-import { signUpUserStart, signUpUserSuccess } from './userActions'
+import { signUpUserStart, signUpUserSuccess, signUpUserFailure } from './userActions'
 import { BASE_BACKEND_URL } from '../../constants';
 export const signUpUserAsync = userCredentials => {
     return async dispatch => {
@@ -14,13 +14,14 @@ export const signUpUserAsync = userCredentials => {
         });
   
         if (!response.ok) {
-          throw new Error('Signup failed');
+          const error  = await response.json()
+          throw new Error(error.error);
         }
   
         const user = await response.json();
         dispatch(signUpUserSuccess(user));
       } catch (error) {
-        // dispatch(signUpUserFailure(error.message)); // Dispatch action on signup failure
+        dispatch(signUpUserFailure(error.message)); // Dispatch action on signup failure
       }
     };
   };

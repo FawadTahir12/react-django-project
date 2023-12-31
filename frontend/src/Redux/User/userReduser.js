@@ -21,13 +21,13 @@ const userReducer = (state = initialState, action) => {
         user: action.payload,
         error: null
       };
-    // case userTypes.SIGN_UP_USER_FAILURE:
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     error: action.payload,
-    //     user: null
-    //   };
+    case userTypes.USER_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        user: null
+      };
     default:
       return state;
   }

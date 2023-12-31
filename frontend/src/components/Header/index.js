@@ -81,12 +81,12 @@ const Header = props => {
                 </Link>
               </li>
               {/* , */}
-              {/* <li key={2}>
+              <li key={2}>
                 <Link to="/login">
                   Login
                   <i class="fas fa-user-circle"></i>
                 </Link>
-              </li> */}
+              </li>
             {/* ]} */}
 
             {/* <li className="mobileMenu">

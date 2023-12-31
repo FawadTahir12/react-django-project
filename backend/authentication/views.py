@@ -15,7 +15,12 @@ class CustomUserCreate(APIView):
 
     def post(self, request):
         email = request.data['email']
-
+        password = request.data['password']
+        confirm_password = request.data['confirmPassword']
+        if password != confirm_password:
+            return  Response({
+                    "error": "Password and confirm password does not match."
+                }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         req_serializer = RegisterUserSerializer(data=request.data)
         if req_serializer.is_valid():
             if CustomUser.objects.filter(email=email).exists():
