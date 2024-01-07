@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link,useLocation, useHistory, useNavigate } from 'react-router-dom';
+import queryString from "query-string";
+import axios from "axios"; 
+import { REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT, REACT_APP_GOOGLE_CLIENT_ID , BASE_BACKEND_URL} from '../../constants';
 // import { emailSignInStart, googleSignInStart } from './../../redux/User/user.actions';
 
 import './style.scss';
@@ -42,9 +45,74 @@ const SignIn = props => {
 //     dispatch(googleSignInStart());
 //   }
 
+const openGoogleLoginPage = useCallback((e) => {
+    e.preventDefault();
+    const googleAuthUrl = "https://accounts.google.com/o/oauth2/auth";
+    
+    const scope = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ].join(" ");
+
+    const params = new URLSearchParams({
+      response_type: "code",
+      client_id: REACT_APP_GOOGLE_CLIENT_ID,
+      redirect_uri: `${REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT}/login`,
+      prompt: "select_account",
+      access_type: "offline",
+      scope,
+    });
+
+    const url = `${googleAuthUrl}?${params}`;
+    console.log(url);
+
+    window.location.href = url;
+},[]);
+
   const configAuthWrapper = {
     headline: 'LogIn'
   };
+
+
+
+
+
+
+
+  let location = useLocation();
+  console.log("location", location);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const values = queryString.parse(location.search);
+    const code = values.code ? values.code : null;
+
+    if (code) {
+      onGogglelogin();
+    }
+  }, []);
+
+  const googleLoginHandler = (code) => {
+    return axios
+      .get(`${BASE_BACKEND_URL}/user/login/google/${code}`)
+      .then((res) => {
+        localStorage.setItem("goggleFirstName", res.data.user.first_name);
+        return res.data;
+      })
+      .catch((err) => {
+        setError(err);
+        return err;
+      });
+  };
+
+  const onGogglelogin = async () => {
+    const response = await googleLoginHandler(location.search);
+    console.log(response.data);
+    // if (response.data.access) {
+    //   navigate("/");
+    // }
+  }
 
   return (
     <AuthWrapper {...configAuthWrapper}>
@@ -74,8 +142,8 @@ const SignIn = props => {
 
           <div className="socialSignin">
             <div className="row">
-            {/* onClick={handleGoogleSignIn} */}
-              <Button >
+            
+              <Button onClick={openGoogleLoginPage}>
                 Sign in with Google
               </Button>
             </div>

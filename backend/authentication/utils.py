@@ -41,7 +41,6 @@ def google_get_access_token(*, code: str, redirect_uri: str) -> str:
         raise ValidationError('Failed to obtain access token from Google.')
 
     access_token = response.json()['access_token']
-
     return access_token
 
 
