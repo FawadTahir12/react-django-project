@@ -14,3 +14,8 @@ export const signUpUserFailure = user => ({
     type: userTypes.USER_ERROR,
     payload: user
   });
+
+  export const googleSignIn = code => ({
+    type: userTypes.GOOGLE_SIGN_IN_START,
+    payload: code
+  });

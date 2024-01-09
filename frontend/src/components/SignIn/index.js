@@ -4,6 +4,7 @@ import { Link,useLocation, useHistory, useNavigate } from 'react-router-dom';
 import queryString from "query-string";
 import axios from "axios"; 
 import { REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT, REACT_APP_GOOGLE_CLIENT_ID , BASE_BACKEND_URL} from '../../constants';
+import { openGoogleLoginPage } from '../../Redux/User/userApis'
 // import { emailSignInStart, googleSignInStart } from './../../redux/User/user.actions';
 
 import './style.scss';
@@ -17,7 +18,7 @@ import Button from '../forms/Button/index';
 // });
 
 const SignIn = props => {
-//   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 //   const history = useHistory();
 //   const { currentUser } = useSelector(mapState);
   const [email, setEmail] = useState('');
@@ -41,32 +42,10 @@ const SignIn = props => {
 //     dispatch(emailSignInStart({ email, password }));
 //   }
 
-//   const handleGoogleSignIn = () => {
-//     dispatch(googleSignInStart());
-//   }
 
-const openGoogleLoginPage = useCallback((e) => {
+const handleGoogleSignIn = useCallback((e) => {
     e.preventDefault();
-    const googleAuthUrl = "https://accounts.google.com/o/oauth2/auth";
-    
-    const scope = [
-      "https://www.googleapis.com/auth/userinfo.email",
-      "https://www.googleapis.com/auth/userinfo.profile",
-    ].join(" ");
-
-    const params = new URLSearchParams({
-      response_type: "code",
-      client_id: REACT_APP_GOOGLE_CLIENT_ID,
-      redirect_uri: `${REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT}/login`,
-      prompt: "select_account",
-      access_type: "offline",
-      scope,
-    });
-
-    const url = `${googleAuthUrl}?${params}`;
-    console.log(url);
-
-    window.location.href = url;
+    openGoogleLoginPage();
 },[]);
 
   const configAuthWrapper = {
@@ -80,7 +59,6 @@ const openGoogleLoginPage = useCallback((e) => {
 
 
   let location = useLocation();
-  console.log("location", location);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -89,7 +67,7 @@ const openGoogleLoginPage = useCallback((e) => {
     const code = values.code ? values.code : null;
 
     if (code) {
-      onGogglelogin();
+      dispatch(onGogglelogin(code));
     }
   }, []);
 
@@ -143,7 +121,7 @@ const openGoogleLoginPage = useCallback((e) => {
           <div className="socialSignin">
             <div className="row">
             
-              <Button onClick={openGoogleLoginPage}>
+              <Button onClick={handleGoogleSignIn}>
                 Sign in with Google
               </Button>
             </div>
