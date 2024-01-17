@@ -3,7 +3,8 @@ import  userTypes  from './userTypes.js';
 const initialState = {
   loading: false,
   user: null,
-  error: null
+  error: null,
+  code: ''
 };
 
 const userReducer = (state = initialState, action) => {
@@ -18,7 +19,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        user: action.payload,
+        ...action.payload,
         error: null
       };
     case userTypes.USER_ERROR:
@@ -27,6 +28,14 @@ const userReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
         user: null
+      };
+    case userTypes.GOOGLE_SIGN_IN_START:
+      return {
+        ...state,
+        loading: true,
+        code: action.payload,
+        user: null,
+        error: null
       };
     default:
       return state;

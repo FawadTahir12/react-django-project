@@ -8,15 +8,14 @@ import AuthWrapper from '../AuthWrapper/index';
 import FormInput from '../forms/FormInput/index';
 import Button from '../forms/Button/index';
 
-const mapState = ({ user }) => ({
-  currentUser: user.user,
-  userErr: user.error
+const getUser = (state) => ({
+  currentUser: state.userState.user
 });
 
 const Signup = props => {
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const { currentUser, userErr } = useSelector(mapState);
+  const { currentUser, userErr } = useSelector(getUser);
 
   const [fullname, setfullname] = useState('');
   const [email, setEmail] = useState('');
@@ -61,6 +60,8 @@ const Signup = props => {
   const configAuthWrapper = {
     headline: 'Registration'
   };
+
+  console.log(currentUser, 'Registration');
 
   return (
     <AuthWrapper {...configAuthWrapper}>

@@ -37,7 +37,7 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
         error = validated_data.get('error')
 
         login_url = f'{settings.BASE_FRONTEND_URL}/login'
-    
+        print(login_url, 'login')
         if error or not code:
             params = urlencode({'error': error})
             return redirect(f'{login_url}?{params}')

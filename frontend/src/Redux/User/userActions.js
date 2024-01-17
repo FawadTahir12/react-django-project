@@ -15,7 +15,7 @@ export const signUpUserFailure = user => ({
     payload: user
   });
 
-  export const googleSignIn = code => ({
+  export const googleSignInStart = code => ({
     type: userTypes.GOOGLE_SIGN_IN_START,
     payload: code
   });

@@ -49,23 +49,23 @@ class CustomUserCreate(APIView):
             return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class CustomTokenObtainPairView(TokenObtainPairView):
-#     def post(self, request, *args, **kwargs):
-#         # Check if email and password are present in the request data
-#         email = request.data.get('email')
-#         password = request.data.get('password')
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        # Check if email and password are present in the request data
+        email = request.data.get('email')
+        password = request.data.get('password')
 
-#         if not email or not password:
-#             # If either email or password is missing, return a custom response
-#             return Response(
-#                 {'error': 'Email or Password is required'},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
+        if not email or not password:
+            # If either email or password is missing, return a custom response
+            return Response(
+                {'error': 'Email or Password is required'},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
-#         # Call the parent class's post method to generate the token
-#         response = super().post(request, *args, **kwargs)
+        # Call the parent class's post method to generate the token
+        response = super().post(request, *args, **kwargs)
 
-#         return response
+        return response
 
 
 # class VerifyAccount(APIView): # This function verify otp when otp saved in databse

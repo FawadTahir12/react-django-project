@@ -1,10 +1,10 @@
-import React, { useState, useEffect , useCallback} from 'react';
+import React, { useState, useEffect , useCallback, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link,useLocation, useHistory, useNavigate } from 'react-router-dom';
+import {googleSignIN} from '../../Redux/User/userApis'
 import queryString from "query-string";
 import axios from "axios"; 
 import { REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT, REACT_APP_GOOGLE_CLIENT_ID , BASE_BACKEND_URL} from '../../constants';
-import { openGoogleLoginPage } from '../../Redux/User/userApis'
 // import { emailSignInStart, googleSignInStart } from './../../redux/User/user.actions';
 
 import './style.scss';
@@ -13,16 +13,25 @@ import AuthWrapper from '../AuthWrapper/index';
 import FormInput from '../forms/FormInput/index';
 import Button from '../forms/Button/index';
 
-// const mapState = ({ user }) => ({
-//   currentUser: user.currentUser
-// });
+const getUser = (state) => ({
+  currentUser: state.userState.user
+});
 
-const SignIn = props => {
+const SignIn = ()=> {
   const dispatch = useDispatch();
-//   const history = useHistory();
-//   const { currentUser } = useSelector(mapState);
+  const { currentUser } = useSelector(getUser);
+
+  let location = useLocation();
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
+  const [values,setValues] = useState(queryString.parse(location.search));
+  const  [code, setCode] = useState(null)
+
+  useEffect(() => {
+    setCode(values.code ? values.code : null)
+  },[values])
 
 //   useEffect(() => {
 //     if (currentUser) {
@@ -42,55 +51,53 @@ const SignIn = props => {
 //     dispatch(emailSignInStart({ email, password }));
 //   }
 
-
-const handleGoogleSignIn = useCallback((e) => {
+//   const handleGoogleSignIn = () => {
+//     dispatch(googleSignInStart());
+//   }
+const openGoogleLoginPage = (e) => {
     e.preventDefault();
-    openGoogleLoginPage();
-},[]);
+    const googleAuthUrl = "https://accounts.google.com/o/oauth2/auth";
+    
+    const scope = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ].join(" ");
+
+    const params = new URLSearchParams({
+      response_type: "code",
+      client_id: REACT_APP_GOOGLE_CLIENT_ID,
+      redirect_uri: `${REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT}/login`,
+      prompt: "select_account",
+      access_type: "offline",
+      scope,
+    });
+
+    const url = `${googleAuthUrl}?${params}`;
+
+    window.location.href = url;
+};
 
   const configAuthWrapper = {
     headline: 'LogIn'
   };
 
 
+ console.log(currentUser, 'currentuser' );
 
 
-
-
-
-  let location = useLocation();
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const values = queryString.parse(location.search);
-    const code = values.code ? values.code : null;
-
-    if (code) {
-      dispatch(onGogglelogin(code));
-    }
-  }, []);
-
-  const googleLoginHandler = (code) => {
-    return axios
-      .get(`${BASE_BACKEND_URL}/user/login/google/${code}`)
-      .then((res) => {
-        localStorage.setItem("goggleFirstName", res.data.user.first_name);
-        return res.data;
-      })
-      .catch((err) => {
-        setError(err);
-        return err;
-      });
-  };
-
-  const onGogglelogin = async () => {
-    const response = await googleLoginHandler(location.search);
-    console.log(response.data);
-    // if (response.data.access) {
+  const onGogglelogin =  () => {
+    dispatch(googleSignIN(location.search))
+    // if (currentUser?.user) {
     //   navigate("/");
     // }
   }
+  useEffect(() => {
+    console.log("hello");
+    if (code) {
+      
+      onGogglelogin();
+    }
+  }, [code]);
 
   return (
     <AuthWrapper {...configAuthWrapper}>
@@ -121,7 +128,7 @@ const handleGoogleSignIn = useCallback((e) => {
           <div className="socialSignin">
             <div className="row">
             
-              <Button onClick={handleGoogleSignIn}>
+              <Button onClick={openGoogleLoginPage}>
                 Sign in with Google
               </Button>
             </div>
