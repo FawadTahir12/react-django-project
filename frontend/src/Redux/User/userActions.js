@@ -15,7 +15,27 @@ export const signUpUserFailure = user => ({
     payload: user
   });
 
+  export const emailSignInStart = userCredentials => ({
+    type: userTypes.EMAIL_LOGIN_START,
+    payload: userCredentials
+  });
+
+
+  export const emailSignInSuccess = user=> ({
+    type: userTypes.EMAIL_LOGIN_SUCCESS,
+    payload: user
+  });
+
+
+  export const emailSignInFailure = error => ({
+    type: userTypes.USER_ERROR,
+    payload: error
+  });
+
+
   export const googleSignInStart = code => ({
     type: userTypes.GOOGLE_SIGN_IN_START,
     payload: code
   });
+
+

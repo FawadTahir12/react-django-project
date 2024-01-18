@@ -37,6 +37,23 @@ const userReducer = (state = initialState, action) => {
         user: null,
         error: null
       };
+    case userTypes.EMAIL_LOGIN_START:
+      return {
+        ...state,
+        loading: true,
+        code: null,
+        user: action.payload,
+        error: null
+      };
+    case userTypes.EMAIL_LOGIN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        code: null,
+        user:action.payload,
+        error: null
+      };
+   
     default:
       return state;
   }

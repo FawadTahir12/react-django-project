@@ -1,7 +1,11 @@
-import { signUpUserStart, signUpUserSuccess, signUpUserFailure,googleSignInStart } from './userActions'
-import { BASE_BACKEND_URL,REACT_APP_GOOGLE_CLIENT_ID,REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT } from '../../constants';
-import { useCallback } from 'react';
-import axios from 'axios';
+import { signUpUserStart, 
+  signUpUserSuccess, 
+  signUpUserFailure,
+  googleSignInStart, 
+  emailSignInStart, 
+  emailSignInSuccess, 
+  emailSignInFailure } from './userActions'
+import { BASE_BACKEND_URL } from '../../constants';
 
 export const signUpUserAsync = userCredentials => {
     return async dispatch => {
@@ -40,7 +44,7 @@ export const signUpUserAsync = userCredentials => {
           method: 'GET'
         })
         const user = await res.json();
-        if(user.access_token){
+        if(user.access){
           dispatch(signUpUserSuccess(user));
         }
         
@@ -49,3 +53,34 @@ export const signUpUserAsync = userCredentials => {
     }
     };
   };
+
+
+
+
+  export const loginWithEmail = userCredentials => {
+    return async dispatch => {
+      dispatch(emailSignInStart(userCredentials));
+  
+      try {
+        const response = await fetch(`${BASE_BACKEND_URL}/user/token/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userCredentials)
+        });
+        
+        if (!response.ok) {
+          const error  = await response.json()
+          throw new Error(error.detail);
+        }
+        
+        const user = await response.json();
+        dispatch(emailSignInSuccess(user));
+      } catch (error) {
+        console.log(error.message);
+        dispatch(emailSignInFailure(error.message)); // Dispatch action on signup failure
+      }
+    };
+  };
+

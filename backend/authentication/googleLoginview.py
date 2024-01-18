@@ -53,8 +53,8 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
             access_token, refresh_token = generate_tokens_for_user(user)
             response_data = {
                 'user': RegisterUserSerializer(user).data,
-                'access_token': str(access_token),
-                'refresh_token': str(refresh_token)
+                'access': str(access_token),
+                'refresh': str(refresh_token)
             }
             return Response(response_data)
         except CustomUser.DoesNotExist:
@@ -71,7 +71,7 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
             access_token, refresh_token = generate_tokens_for_user(user)
             response_data = {
                 'user': RegisterUserSerializer(user).data,
-                'access_token': str(access_token),
-                'refresh_token': str(refresh_token)
+                'access': str(access_token),
+                'refresh': str(refresh_token)
             }
             return Response(response_data)

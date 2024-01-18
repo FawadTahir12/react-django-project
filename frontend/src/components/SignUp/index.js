@@ -61,7 +61,6 @@ const Signup = props => {
     headline: 'Registration'
   };
 
-  console.log(currentUser, 'Registration');
 
   return (
     <AuthWrapper {...configAuthWrapper}>

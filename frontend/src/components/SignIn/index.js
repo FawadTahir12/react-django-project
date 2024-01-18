@@ -1,11 +1,9 @@
-import React, { useState, useEffect , useCallback, memo} from 'react';
+import React, { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link,useLocation, useHistory, useNavigate } from 'react-router-dom';
-import {googleSignIN} from '../../Redux/User/userApis'
+import { Link,useLocation,  useNavigate } from 'react-router-dom';
+import { googleSignIN, loginWithEmail} from '../../Redux/User/userApis'
 import queryString from "query-string";
-import axios from "axios"; 
-import { REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT, REACT_APP_GOOGLE_CLIENT_ID , BASE_BACKEND_URL} from '../../constants';
-// import { emailSignInStart, googleSignInStart } from './../../redux/User/user.actions';
+import { REACT_APP_GOGGLE_REDIRECT_URL_ENDPOINT, REACT_APP_GOOGLE_CLIENT_ID } from '../../constants';
 
 import './style.scss';
 
@@ -46,14 +44,16 @@ const SignIn = ()=> {
 //     setPassword('');
 //   };
 
-//   const handleSubmit = e => {
-//     e.preventDefault();
-//     dispatch(emailSignInStart({ email, password }));
-//   }
+  const handleSubmit = e => {
+    e.preventDefault();
+    const userData = {
+      'email': email,
+      'password': password,
+    }
+    dispatch(loginWithEmail(userData));
 
-//   const handleGoogleSignIn = () => {
-//     dispatch(googleSignInStart());
-//   }
+  }
+
 const openGoogleLoginPage = (e) => {
     e.preventDefault();
     const googleAuthUrl = "https://accounts.google.com/o/oauth2/auth";
@@ -82,27 +82,30 @@ const openGoogleLoginPage = (e) => {
   };
 
 
- console.log(currentUser, 'currentuser' );
-
 
   const onGogglelogin =  () => {
     dispatch(googleSignIN(location.search))
-    // if (currentUser?.user) {
-    //   navigate("/");
-    // }
   }
   useEffect(() => {
-    console.log("hello");
+    
     if (code) {
       
       onGogglelogin();
     }
   }, [code]);
 
+console.log(currentUser, "currentUser");
+
+  useEffect(() => {
+    if(currentUser?.access){
+      navigate("/");
+    }
+  },[currentUser])
+
   return (
     <AuthWrapper {...configAuthWrapper}>
-      <div className="formWrap">
-      {/* onSubmit={handleSubmit} */}
+      <div className="formWrap" onSubmit={handleSubmit}>
+      
         <form >
 
           <FormInput
@@ -110,7 +113,7 @@ const openGoogleLoginPage = (e) => {
             name="email"
             value={email}
             placeholder="Email"
-            // handleChange={e => setEmail(e.target.value)}
+            handleChange={e => setEmail(e.target.value)}
           />
 
           <FormInput
@@ -118,7 +121,7 @@ const openGoogleLoginPage = (e) => {
             name="password"
             value={password}
             placeholder="Password"
-            // handleChange={e => setPassword(e.target.value)}
+            handleChange={e => setPassword(e.target.value)}
           />
 
           <Button type="submit">
