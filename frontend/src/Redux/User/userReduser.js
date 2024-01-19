@@ -19,7 +19,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        ...action.payload,
+        user: action.payload,
         error: null
       };
     case userTypes.USER_ERROR:

@@ -9,7 +9,8 @@ import FormInput from '../forms/FormInput/index';
 import Button from '../forms/Button/index';
 
 const getUser = (state) => ({
-  currentUser: state.userState.user
+  currentUser: state.userState.user,
+  userErr: state.userState.error
 });
 
 const Signup = props => {

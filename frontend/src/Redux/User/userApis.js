@@ -7,6 +7,7 @@ import { signUpUserStart,
   emailSignInFailure } from './userActions'
 import { BASE_BACKEND_URL } from '../../constants';
 
+
 export const signUpUserAsync = userCredentials => {
     return async dispatch => {
       dispatch(signUpUserStart(userCredentials));
@@ -37,7 +38,6 @@ export const signUpUserAsync = userCredentials => {
     
     return async dispatch => {
       dispatch(googleSignInStart(code));
-  
       try {
         const res = await fetch(`${BASE_BACKEND_URL}/user/login/google/${code}`,
         {
@@ -46,6 +46,7 @@ export const signUpUserAsync = userCredentials => {
         const user = await res.json();
         if(user.access){
           dispatch(signUpUserSuccess(user));
+          
         }
         
     } catch (error) {
@@ -60,6 +61,7 @@ export const signUpUserAsync = userCredentials => {
   export const loginWithEmail = userCredentials => {
     return async dispatch => {
       dispatch(emailSignInStart(userCredentials));
+      
   
       try {
         const response = await fetch(`${BASE_BACKEND_URL}/user/token/`, {

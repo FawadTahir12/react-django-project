@@ -12,16 +12,18 @@ import FormInput from '../forms/FormInput/index';
 import Button from '../forms/Button/index';
 
 const getUser = (state) => ({
-  currentUser: state.userState.user
+  currentUser: state.userState.user,
+  userErr: state.userState.error
 });
 
 const SignIn = ()=> {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector(getUser);
+  const { currentUser,userErr } = useSelector(getUser);
+  const navigate = useNavigate();
 
   let location = useLocation();
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+ 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
   const [values,setValues] = useState(queryString.parse(location.search));
@@ -31,19 +33,18 @@ const SignIn = ()=> {
     setCode(values.code ? values.code : null)
   },[values])
 
-//   useEffect(() => {
-//     if (currentUser) {
-//       resetForm();
-//       history.push('/');
-//     }
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+  };
 
-//   }, [currentUser]);
 
-//   const resetForm = () => {
-//     setEmail('');
-//     setPassword('');
-//   };
+  useEffect(() => {
+    if (userErr && userErr.length > 0) {
+      setError(userErr);
+    }
 
+  }, [userErr]);
   const handleSubmit = e => {
     e.preventDefault();
     const userData = {
@@ -94,10 +95,10 @@ const openGoogleLoginPage = (e) => {
     }
   }, [code]);
 
-console.log(currentUser, "currentUser");
-
   useEffect(() => {
     if(currentUser?.access){
+      resetForm();
+      
       navigate("/");
     }
   },[currentUser])
@@ -105,7 +106,11 @@ console.log(currentUser, "currentUser");
   return (
     <AuthWrapper {...configAuthWrapper}>
       <div className="formWrap" onSubmit={handleSubmit}>
-      
+      {error.length > 0 && (
+          <ul>
+            {error}   
+          </ul>
+        )}
         <form >
 
           <FormInput

@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import RegisterUserSerializer, VerifyAccountSerializer
+from .serializers import RegisterUserSerializer, VerifyAccountSerializer, MyTokenObtainPairSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import CustomUser
 
@@ -50,21 +50,22 @@ class CustomUserCreate(APIView):
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
     def post(self, request, *args, **kwargs):
-        # Check if email and password are present in the request data
-        email = request.data.get('email')
-        password = request.data.get('password')
-
-        if not email or not password:
-            # If either email or password is missing, return a custom response
+        email_request = request.data.get('email')
+        password_request = request.data.get('password')
+        if not email_request or not password_request:
             return Response(
                 {'error': 'Email or Password is required'},
                 status=status.HTTP_403_FORBIDDEN
             )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serialized_data = serializer.validated_data
 
-        # Call the parent class's post method to generate the token
-        response = super().post(request, *args, **kwargs)
-
+      
+        response = Response(data=serialized_data, status=200)
+        # response = super().post(request, *args, **kwargs)   
         return response
 
 

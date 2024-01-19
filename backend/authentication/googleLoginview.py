@@ -37,7 +37,6 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
         error = validated_data.get('error')
 
         login_url = f'{settings.BASE_FRONTEND_URL}/login'
-        print(login_url, 'login')
         if error or not code:
             params = urlencode({'error': error})
             return redirect(f'{login_url}?{params}')
@@ -51,8 +50,9 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
         try:
             user = CustomUser.objects.get(email=user_data['email'])
             access_token, refresh_token = generate_tokens_for_user(user)
+            
             response_data = {
-                'user': RegisterUserSerializer(user).data,
+                **RegisterUserSerializer(user).data,
                 'access': str(access_token),
                 'refresh': str(refresh_token)
             }
@@ -70,7 +70,7 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
          
             access_token, refresh_token = generate_tokens_for_user(user)
             response_data = {
-                'user': RegisterUserSerializer(user).data,
+                **RegisterUserSerializer(user).data,
                 'access': str(access_token),
                 'refresh': str(refresh_token)
             }
