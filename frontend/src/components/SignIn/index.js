@@ -107,9 +107,9 @@ const openGoogleLoginPage = (e) => {
     <AuthWrapper {...configAuthWrapper}>
       <div className="formWrap" onSubmit={handleSubmit}>
       {error.length > 0 && (
-          <ul>
+          <li>
             {error}   
-          </ul>
+          </li>
         )}
         <form >
 

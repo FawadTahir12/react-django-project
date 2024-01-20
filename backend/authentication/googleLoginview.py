@@ -6,20 +6,20 @@ from django.shortcuts import redirect
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
 from .mixins import PublicApiMixin, ApiErrorsMixin
-from .utils import google_get_access_token, google_get_user_info
+from .utils import google_get_access_token, google_get_user_info,generate_tokens_for_user
 from .models import CustomUser
 from .serializers import RegisterUserSerializer
 
 
-def generate_tokens_for_user(user):
-    """
-    Generate access and refresh tokens for the given user
-    """
-    serializer = TokenObtainPairSerializer()
-    token_data = serializer.get_token(user)
-    access_token = token_data.access_token
-    refresh_token = token_data
-    return access_token, refresh_token
+# def generate_tokens_for_user(user):
+#     """
+#     Generate access and refresh tokens for the given user
+#     """
+#     serializer = TokenObtainPairSerializer()
+#     token_data = serializer.get_token(user)
+#     access_token = token_data.access_token
+#     refresh_token = token_data
+#     return access_token, refresh_token
 
 
 class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
@@ -58,7 +58,6 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
             }
             return Response(response_data)
         except CustomUser.DoesNotExist:
-            username = user_data['email'].split('@')[0]
             first_name = user_data.get('given_name', '')
             last_name = user_data.get('family_name', '')
 

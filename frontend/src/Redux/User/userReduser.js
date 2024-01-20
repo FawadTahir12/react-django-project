@@ -53,7 +53,12 @@ const userReducer = (state = initialState, action) => {
         user:action.payload,
         error: null
       };
-   
+    case userTypes.SIGN_OUT_USER_START:
+      return {
+        ...state,
+        ...initialState
+        
+        };
     default:
       return state;
   }

@@ -74,7 +74,7 @@ export const signUpUserAsync = userCredentials => {
         
         if (!response.ok) {
           const error  = await response.json()
-          throw new Error(error.detail);
+          throw new Error(error.error);
         }
         
         const user = await response.json();

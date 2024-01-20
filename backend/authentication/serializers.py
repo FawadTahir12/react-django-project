@@ -3,7 +3,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.conf import settings
 from .models import CustomUser
 from rest_framework.validators import UniqueValidator
+from rest_framework.views import exception_handler
 
+    
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -21,6 +23,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+    
+    
 
 
 class VerifyAccountSerializer(serializers.Serializer):
@@ -32,6 +36,7 @@ class VerifyAccountSerializer(serializers.Serializer):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
     def validate(self, attrs):
+    
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
         data["refresh"] = str(refresh)   # comment out if you don't want this
