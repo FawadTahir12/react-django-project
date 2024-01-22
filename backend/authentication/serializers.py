@@ -45,3 +45,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["id"] = self.user.id
         data["full_name"] = self.user.full_name
         return data
+    
+
+
+
+class resetpasswordSerializer(serializers.ModelSerializer):
+    email=serializers.CharField(max_length=100)
+    password=serializers.CharField(max_length=100)
+    class Meta:
+        model=CustomUser
+        fields=['email', 'password']
+    def save(self):
+        email=self.validated_data['email']
+        password=self.validated_data['password']
+        if CustomUser.objects.filter(email=email).exists():
+            user=CustomUser.objects.get(email=email)
+
+            user.set_password(password)
+            user.save()
+            return user
+        else:
+            raise serializers.ValidationError({'error':'please enter valid crendentials'})

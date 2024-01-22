@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import RegisterUserSerializer, VerifyAccountSerializer, MyTokenObtainPairSerializer
+from .serializers import RegisterUserSerializer, VerifyAccountSerializer, MyTokenObtainPairSerializer,resetpasswordSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import CustomUser
 
@@ -67,6 +67,21 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         response = Response(data=serialized_data, status=200)
         # response = super().post(request, *args, **kwargs)   
         return response
+    
+    
+class resetpassword(APIView):
+    def post(self,request):
+        serializer=resetpasswordSerializer(data=request.data)
+        alldatas={}
+        
+        if serializer.is_valid(raise_exception=True):
+            mname=serializer.save()
+            alldatas['data']='successfully registered'
+            print(alldatas)
+            return Response(alldatas)
+        return Response('failed retry after some time')
+
+
 
 
 # class VerifyAccount(APIView): # This function verify otp when otp saved in databse

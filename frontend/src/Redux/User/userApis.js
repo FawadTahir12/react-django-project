@@ -80,7 +80,6 @@ export const signUpUserAsync = userCredentials => {
         const user = await response.json();
         dispatch(emailSignInSuccess(user));
       } catch (error) {
-        console.log(error.message);
         dispatch(emailSignInFailure(error.message)); // Dispatch action on signup failure
       }
     };
