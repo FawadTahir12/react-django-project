@@ -5,9 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import RegisterUserSerializer, VerifyAccountSerializer, MyTokenObtainPairSerializer,resetpasswordSerializer
+from .serializers import RegisterUserSerializer, VerifyAccountSerializer, MyTokenObtainPairSerializer,resetpasswordSerializer,checkEmailForRecovry
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import CustomUser
+from .utils import send_otp_email
 
 # Create your views here.
 class CustomUserCreate(APIView):
@@ -68,7 +69,15 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         # response = super().post(request, *args, **kwargs)   
         return response
     
-    
+
+class SendPasswordRecoveryEmail(APIView):
+    def post(self, request):
+        serializer = checkEmailForRecovry(data=request.data)
+        if serializer.is_valid():
+            send_otp_email(request.data['email'])
+            return Response({'status': 'success'})
+        return Response({'status': 'Failure'})
+            
 class resetpassword(APIView):
     def post(self,request):
         serializer=resetpasswordSerializer(data=request.data)

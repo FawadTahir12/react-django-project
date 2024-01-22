@@ -4,7 +4,8 @@ const initialState = {
   loading: false,
   user: null,
   error: null,
-  code: ''
+  code: '',
+  emailRecovery: false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -57,6 +58,12 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         ...initialState
+        
+        };
+    case userTypes.RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        emailRecovery: true
         
         };
     default:

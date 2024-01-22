@@ -38,6 +38,11 @@ export const signUpUserFailure = user => ({
     payload: code
   });
 
+  export const resetPasswordSuccess = () => ({
+    type: userTypes.RESET_PASSWORD_SUCCESS,
+
+  });
+
 
   export const logout = () => ({
     type: userTypes.SIGN_OUT_USER_START,   

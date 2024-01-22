@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
-// import { resetPasswordStart, resetUserState } from './../../redux/User/user.actions';
+import { sendForgotPasswordMail } from '../../Redux/User/userApis';
 import './style.scss';
 
 import AuthWrapper from './../AuthWrapper';
@@ -14,7 +14,7 @@ import Button from './../forms/Button';
 // });
 
 const EmailPassword = props => {
-//   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 //   const history = useHistory();
 //   const { resetPasswordSuccess, userErr } = useSelector(mapState);
   const [email, setEmail] = useState('');
@@ -37,8 +37,7 @@ const EmailPassword = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(email);
-    // dispatch(resetPasswordStart({ email }));
+    dispatch(sendForgotPasswordMail({ email }));
   }
 
   const configAuthWrapper = {

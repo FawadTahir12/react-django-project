@@ -1,11 +1,18 @@
-# utils.py
-
 
 import requests
 from typing import Dict, Any
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.core.mail import send_mail
+
+from django.conf import settings
+from django.template.loader import render_to_string
+from .models import CustomUser
+from datetime import datetime, timedelta
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 GOOGLE_ID_TOKEN_INFO_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
@@ -77,3 +84,24 @@ def get_error_message(exc) -> str:
         error_msg = str(exc)
 
     return error_msg
+
+
+
+
+def send_otp_email(email):
+
+    subject = "Reset Password"
+    message = ''
+    email_from = os.environ['EMAIL_HOST_USER']
+    context = {
+    'subject': subject,
+    'greeting': 'Hey, From ECOM App',
+    'message': 'Your Reset Password Link is given. Below Please to set your password click the link below',
+}
+    html_message = render_to_string('authentication/email.html', context)
+    # Send the email
+    try:
+        send_mail(subject, message, email_from, [email], html_message=html_message)
+    except Exception as e:
+        print('Error sending email:', str(e))
+        return None

@@ -48,7 +48,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
 
 
-
+class checkEmailForRecovry(serializers.ModelSerializer):
+    email=serializers.CharField(max_length=100)
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+        
 class resetpasswordSerializer(serializers.ModelSerializer):
     email=serializers.CharField(max_length=100)
     password=serializers.CharField(max_length=100)

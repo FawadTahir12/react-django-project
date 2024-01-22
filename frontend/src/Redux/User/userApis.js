@@ -4,7 +4,8 @@ import { signUpUserStart,
   googleSignInStart, 
   emailSignInStart, 
   emailSignInSuccess, 
-  emailSignInFailure } from './userActions'
+  emailSignInFailure,
+  resetPasswordSuccess } from './userActions'
 import { BASE_BACKEND_URL } from '../../constants';
 
 
@@ -79,6 +80,36 @@ export const signUpUserAsync = userCredentials => {
         
         const user = await response.json();
         dispatch(emailSignInSuccess(user));
+      } catch (error) {
+        dispatch(emailSignInFailure(error.message)); // Dispatch action on signup failure
+      }
+    };
+  };
+
+
+
+
+
+
+  export const sendForgotPasswordMail = email => {
+    return async dispatch => { 
+      try {
+        const response = await fetch(`${BASE_BACKEND_URL}/user/send-reset-password-mail/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(email)
+        });
+        
+        if (!response.ok) {
+          const error  = await response.json()
+          throw new Error(error.error);
+        }
+        
+        const user = await response.json();
+        console.log(user, "user");
+        dispatch(resetPasswordSuccess());
       } catch (error) {
         dispatch(emailSignInFailure(error.message)); // Dispatch action on signup failure
       }
