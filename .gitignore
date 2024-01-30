@@ -6,3 +6,5 @@
 # Ignore .env files at the root of the repository
 .env
 
+backend/authentication/__pycache__/
+backend/backend/__pycache__/
