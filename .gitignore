@@ -1,0 +1,8 @@
+# .gitignore
+
+# Ignore .env files in all directories
+**/.env
+
+# Ignore .env files at the root of the repository
+.env
+
